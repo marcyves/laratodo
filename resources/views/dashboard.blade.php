@@ -10,6 +10,74 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+                    @empty($tasks)
+                    You're logged in!
+                    @else
+                    <h2 class="font-bold text-xl text-gray-800 leading-tight">Taches en cours</h2>
+                        <ul>
+                        @foreach ($tasks as $task)
+                            <li class="flex">
+                                <div class="flex-1 min-w-max">
+                                        @if($task->priority=="A")
+                                        <span class="prioA">
+                                        @elseif($task->priority=="B")
+                                        <span class="prioB">
+                                        @else    
+                                        <span class="prioC">
+                                        @endif
+                                    {{ $task->priority }}</span> : {{ $task->description }}
+                                </div>
+                                <div class="flex-none min-w-max">
+                                    <form action="{{ route('manage') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="task_id"  value="{{ $task->id }}">
+                                        <x-button type="submit" name="cmd" value="+"><i class="fa-solid fa-arrow-up"></i></x-button>
+                                        <x-button type="submit" name="cmd" value="-"><i class="fa-solid fa-arrow-down"></i></x-button>
+                                        <x-button type="submit" name="cmd" value="Termine"><i class="fa-regular fa-circle-check"></i></x-button>
+                                        <x-button type="submit" name="cmd" value="Efface"><i class="fa-solid fa-eraser"></i></x-button>
+                                    </form>        
+                                </div>
+                            </li>
+                        @endforeach
+                        </ul>
+                        <hr>
+                        <h2 class="font-bold text-xl text-gray-800 leading-tight">Taches terminées</h2>
+                        <ul>
+                            @foreach ($closedTasks as $task)
+                                <li class="flex">
+                                    <div class="flex-1 min-w-max">
+                                        @if($task->priority=="A")
+                                        <span class="prioA">
+                                        @elseif($task->priority=="B")
+                                        <span class="prioB">
+                                        @else    
+                                        <span class="prioC">
+                                        @endif
+                                            {{ $task->priority }}</span> : {{ $task->description }}  
+                                    </div> 
+                                    <div class="flex-none min-w-max">
+                                        <form action="{{ route('manage') }}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                            <x-button type="submit" name="cmd" value="Reopen"><i class="fa-solid fa-backward-step"></i></x-button>
+                                            <x-button type="submit" name="cmd" value="Efface"><i class="fa-solid fa-eraser"></i></x-button>
+                                            </form>
+                                    </div>
+                                </li>
+                            @endforeach
+                            </ul>
+    
+                    @endempty
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h2 class="font-bold text-xl text-gray-800 leading-tight">Nouvelle tache : </h2>
 
                 <form action="{{ route('store') }}" method="post">
                     @csrf
@@ -26,49 +94,6 @@
         </div>
     </div>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    @empty($tasks)
-                    You're logged in!
-                    @else
-                    <h2 class="font-bold text-xl text-gray-800 leading-tight">Taches en cours</h2>
-                        <ul>
-                        @foreach ($tasks as $task)
-                            <li>{{ $task->description }}
-                            <form action="{{ route('manage') }}" method="post">
-                                @csrf
-                                <input type="hidden" name="task_id" value="{{ $task->id }}">
-
-                                <input type="submit" name="priority" value="{{ $task->priority }}">
-
-                                <input type="submit" name="cmd" value="Termine">
-                                <input type="submit" name="cmd" value="Efface">
-                            </form>
-                            </li>
-                        @endforeach
-                        </ul>
-                        <hr>
-                        <h2 class="font-bold text-xl text-gray-800 leading-tight">Taches terminées</h2>
-                        <ul>
-                            @foreach ($closedTasks as $task)
-                                <li>{{ $task->description }} ({{ $task->priority }}) 
-                                <form action="{{ route('manage') }}" method="post">
-                                    @csrf
-                                    <input type="hidden" name="task_id" value="{{ $task->id }}">
-                                    <input type="submit" name="cmd" value="Reopen">
-                                    <input type="submit" name="cmd" value="Efface">
-                                </form>
-                                </li>
-                            @endforeach
-                            </ul>
-    
-                    @endempty
-                </div>
-            </div>
-        </div>
-    </div>
 
 </x-app-layout>
 @else

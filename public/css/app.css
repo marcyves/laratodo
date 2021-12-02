@@ -32137,6 +32137,32 @@ select {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+form{
+  display: inline;
+}
+
+li{
+  padding: 8px 12px 4px 4px;
+  border: 2px solid black;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.prioA{
+  color: red;
+  font-weight: 800;
+}
+
+.prioB{
+  color: darkblue;
+  font-weight: 600;
+}
+
+.prioC{
+  color: darkgreen;
+  font-weight: 400;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
@@ -188576,4 +188602,3 @@ select {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
-

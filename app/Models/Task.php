@@ -42,4 +42,44 @@ class Task extends Model
     {
         Task::where('id', $id)->update(['status' => 'En cours']);
     }
+
+    public static function priorityUp($id)
+    {
+        $task = Task::where('id', $id)->first();
+        //dd($task->priority);
+
+        switch($task->priority)
+        {
+            case "A":
+                $priority = "C";
+            break;
+            case "B":
+                $priority = "A";
+            break;
+            case "C":
+                $priority = "B";
+            break;
+        }
+
+        Task::where('id', $id)->update(['priority' => $priority]);
+    }
+    public static function priorityDown($id)
+    {
+        $task = Task::where('id', $id)->first();
+
+        switch($task->priority)
+        {
+            case "A":
+                $priority = "B";
+            break;
+            case "B":
+                $priority = "C";
+            break;
+            case "C":
+                $priority = "A";
+            break;
+        }
+
+        Task::where('id', $id)->update(['priority' => $priority]);
+    }
 }

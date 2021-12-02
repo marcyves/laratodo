@@ -55,6 +55,12 @@ class TaskController extends Controller
             case "Reopen":
                 Task::openbyId($request->task_id);
             break;
+            case "+":
+                Task::priorityUp($request->task_id);
+            break;
+            case "-":
+                Task::priorityDown($request->task_id);
+            break;
         }
     
         return redirect()->route('dashboard');
