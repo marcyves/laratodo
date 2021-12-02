@@ -29,31 +29,9 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         if (!empty($request->description))
-            TasK::createNewTask($request->description, $request->priority);
+            Task::createNewTask($request->description, $request->priority);
 
         return redirect()->route('dashboard');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -82,14 +60,4 @@ class TaskController extends Controller
         return redirect()->route('dashboard');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }
