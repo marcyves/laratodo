@@ -28,7 +28,8 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        TasK::createNewTask($request->description, $request->priority);
+        if (!empty($request->description))
+            TasK::createNewTask($request->description, $request->priority);
 
         return redirect()->route('dashboard');
     }
