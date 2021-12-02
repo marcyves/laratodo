@@ -14,11 +14,14 @@ use App\Http\Controllers\TaskController;
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
+*/
 
-Route::get('/dashboard', [TaskController::class, 'index'])->middleware(['auth'])->name('dashboard');
+Route::get('/', [TaskController::class, 'index'])->name('dashboard');
+//Route::get('/dashboard', [TaskController::class, 'index'])->middleware(['auth'])->name('dashboard');
 Route::post('/store', [TaskController::class, 'store'])->middleware(['auth'])->name('store');
 Route::post('/manage', [TaskController::class, 'manage'])->middleware(['auth'])->name('manage');
 
