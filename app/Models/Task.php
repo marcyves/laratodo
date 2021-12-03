@@ -24,7 +24,7 @@ class Task extends Model
 
     public static function createNewTask($description, $priority)
     {
-        $newTask = TasK::create(['description' => $description,
+        $newTask = Task::create(['description' => $description,
         'priority' => $priority,
         'user_id' => Auth::id(),
         'status' => 'En cours']);
@@ -46,7 +46,6 @@ class Task extends Model
     public static function priorityUp($id)
     {
         $task = Task::where('id', $id)->first();
-        //dd($task->priority);
 
         switch($task->priority)
         {

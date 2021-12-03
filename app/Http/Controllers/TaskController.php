@@ -31,7 +31,7 @@ class TaskController extends Controller
         if (!empty($request->description))
             Task::createNewTask($request->description, $request->priority);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')->with('msg', 'Nouvelle tache ajoutée');
     }
 
     /**
