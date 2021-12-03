@@ -20,26 +20,37 @@ class Task extends Model
         'priority',
         'status',
         'update',
+        'column_id',
         'user_id'
     ];
+
 
     public static function listForStatus($status)
     {
         return Task::where('status', $status)->where('user_id',Auth::id())->orderBy('priority', 'ASC')->get();
     }
 
-    public static function createNewTask($description, $priority)
+    public static function createNew($description, $priority, $column)
     {
+
         $newTask = Task::create(['description' => $description,
         'priority' => $priority,
         'user_id' => Auth::id(),
+        'column_id' => $column,
         'update' => False,
         'status' => 'En cours']);
     }
+    
     public static function deleteById($id)
     {
         Task::where('id', $id)->delete();
     }
+
+    public static function status($id)
+    {
+        return Task::find($id)->status;
+    }
+
     public static function prepareForUpdate($id)
     {
         Task::where('id', $id)->update(['update' => True]);
@@ -55,8 +66,24 @@ class Task extends Model
 
     public static function closeById($id)
     {
-        Task::where('id', $id)->update(['status' => 'Terminé']);
+        $max_col = Column::count();
+        $sort  = Column::getColumnSortForTask($id);
+
+        if($sort>=$max_col){
+            // Quand elle arrive dans la dernière colonne, son status passe à terminé
+            Task::where('id', $id)->update(['status' => 'Terminé']);
+        }else{
+            // Quand une tâche est terminée dans une colonne, elle passe dans la colonne à droite
+            $next_column_id = Column::getColumnIdBySort($sort+1);
+            Task::moveColumn($id, $next_column_id);
+        }
     }
+
+    public static function moveColumn($id, $column_id)
+    {
+        Task::where('id', $id)->update(['column_id' => $column_id]);
+    }
+
     public static function openById($id)
     {
         Task::where('id', $id)->update(['status' => 'En cours']);

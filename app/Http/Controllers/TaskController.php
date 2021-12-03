@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\Column;
 
 class TaskController extends Controller
 {
@@ -14,18 +15,24 @@ class TaskController extends Controller
      */
     public function index()
     {
+        $columns = Column::listAll();
+        
         $tasks = Task::listForStatus('En cours');
         if($tasks->isEmpty())
             $tasks = "";
+
         $closed = Task::listForStatus('Terminé');
         if($closed->isEmpty())
             $closed = "";
 
-        return view('dashboard', ['tasks' => $tasks, 'closedTasks' => $closed]);
+        return view('dashboard', [
+            'columns' => $columns,
+            'tasks' => $tasks,
+            'closedTasks' => $closed]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created task in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -33,7 +40,7 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         if (!empty($request->description))
-            Task::createNewTask($request->description, $request->priority);
+            Task::createNew($request->description, $request->priority, $request->column_id);
 
         return redirect()->route('dashboard')->with('msg', 'Nouvelle tache ajoutée');
     }
@@ -68,8 +75,16 @@ class TaskController extends Controller
                 $message = "Tache terminée";
             break;
             case "Reopen":
-                Task::openbyId($request->task_id);
-                $message = "Tache réouverte";
+                if(Task::status($request->task_id) == "Terminé"){
+                    // Elle est marquée terminée, elle repart en colonne
+                    Task::openbyId($request->task_id);
+                    $message = "Tache réouverte";    
+                }else{
+                    $sort  = Column::getColumnSortForTask($request->task_id);
+                    $left_column_id = Column::getColumnIdBySort($sort-1);
+                    Task::moveColumn($request->task_id, $left_column_id);
+                    $message = "Tache déplacée";    
+                }
             break;
             case "+":
                 Task::priorityUp($request->task_id);
