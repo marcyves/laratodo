@@ -30,16 +30,16 @@ class ColumnController extends Controller
             case "right":
                 $column_right = Column::where('sort', $sort+1)->first();
                 // On décale la colonne de droite à gauche
-                Column::where('id', $column_right->id)->update(['sort' => $column_right->sort-1]);
+                Column::resetOrder($column_right->id, $column_right->sort-1);
                 // On pousse la colonne à droite
-                Column::where('id', $request->column_id)->update(['sort' => $sort+1]);
+                Column::resetOrder($request->column_id, $sort+1);
             break;
             case "left":
                 $column_left = Column::where('sort', $sort-1)->first();
                 // On décale la colonne de gauche à droite
-                Column::where('id', $column_left->id)->update(['sort' => $column_left->sort+1]);
+                Column::resetOrder($column_left->id, $column_left->sort+1);
                 // On pousse la colonne à gauche
-                Column::where('id', $request->column_id)->update(['sort' => $sort-1]);
+                Column::resetOrder($request->column_id, $sort-1);
             break;
         }
 

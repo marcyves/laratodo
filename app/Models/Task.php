@@ -59,8 +59,24 @@ class Task extends Model
 
     public static function closeById($id)
     {
-        Task::where('id', $id)->update(['status' => 'Terminé']);
+        $max_col = Column::count();
+        $sort  = Column::getColumnSortForTask($id);
+
+        if($sort>=$max_col){
+            // Quand elle arrive dans la dernière colonne, son status passe à terminé
+            Task::where('id', $id)->update(['status' => 'Terminé']);
+        }else{
+            // Quand une tâche est terminée dans une colonne, elle passe dans la colonne à droite
+            $next_column_id = Column::getColumnIdBySort($sort)+1;
+            Task::moveColumn($id, $next_column_id);
+        }
     }
+
+    public static function moveColumn($id, $column_id)
+    {
+        Task::where('id', $id)->update(['column_id' => $column_id]);
+    }
+
     public static function openById($id)
     {
         Task::where('id', $id)->update(['status' => 'En cours']);

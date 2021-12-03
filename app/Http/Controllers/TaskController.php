@@ -57,7 +57,7 @@ class TaskController extends Controller
     public function manage(Request $request)
     {
         // On vérifie la cohérence de la requête
-        if($request->column_id == Column::getColumnForTask($request->task_id))
+        if($request->column_id == Column::getColumnIdByTask($request->task_id))
         {
             switch($request->cmd)
             {
