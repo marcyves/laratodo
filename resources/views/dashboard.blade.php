@@ -29,6 +29,22 @@
                         <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Taches en cours</h2>
                         <ul>
                         @foreach ($tasks as $task)
+                            @if($task->update)
+                            <li class="flex">
+                                <form action="{{ route('manage') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="task_id"  value="{{ $task->id }}">
+                                    <x-input type="text" name="description" value="{{ $task->description }}"></x-input>
+                                    <select name="priority">
+                                        <option value="A" @if($task->priority=="A")selected @endif>A</option>
+                                        <option value="B" @if($task->priority=="B")selected @endif>B</option>
+                                        <option value="C" @if($task->priority=="C")selected @endif>C</option>
+                                    </select>
+                                    <x-button type="submit" name="cmd" value="Updated"><i class="fa-regular fa-circle-check"></i></x-button>
+                                </form>
+                
+                            </li>
+                            @else
                             <li class="flex">
                                 <div class="flex-1 min-w-max">
                                         @if($task->priority=="A")
@@ -46,11 +62,13 @@
                                         <input type="hidden" name="task_id"  value="{{ $task->id }}">
                                         <x-button type="submit" name="cmd" value="+"><i class="fa-solid fa-arrow-up"></i></x-button>
                                         <x-button type="submit" name="cmd" value="-"><i class="fa-solid fa-arrow-down"></i></x-button>
+                                        <x-button type="submit" name="cmd" value="Update"><i class="fa-solid fa-pen-to-square"></i></x-button>
                                         <x-button type="submit" name="cmd" value="Termine"><i class="fa-regular fa-circle-check"></i></x-button>
                                         <x-button type="submit" name="cmd" value="Efface"><i class="fa-solid fa-eraser"></i></x-button>
                                     </form>        
                                 </div>
                             </li>
+                            @endif
                         @endforeach
                         </ul>
                         @endempty

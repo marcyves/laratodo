@@ -55,6 +55,14 @@ class TaskController extends Controller
                 Task::deleteById($request->task_id);
                 $message = "Tache effacée";
             break;
+            case "Update":
+                Task::prepareForUpdate($request->task_id);
+                $message = "Vous pouvez modifier la tache sélectionnée";
+            break;
+            case "Updated":
+                Task::saveUpdated($request->task_id, $request->description, $request->priority);
+                $message = "La tache a été modifiée";
+            break;
             case "Termine":
                 Task::closebyId($request->task_id);
                 $message = "Tache terminée";

@@ -19,6 +19,7 @@ class Task extends Model
         'description',
         'priority',
         'status',
+        'update',
         'user_id'
     ];
 
@@ -27,11 +28,24 @@ class Task extends Model
         $newTask = Task::create(['description' => $description,
         'priority' => $priority,
         'user_id' => Auth::id(),
+        'update' => False,
         'status' => 'En cours']);
     }
     public static function deleteById($id)
     {
         Task::where('id', $id)->delete();
+    }
+    public static function prepareForUpdate($id)
+    {
+        Task::where('id', $id)->update(['update' => True]);
+    }
+
+    public static function saveUpdated($id, $description, $priority)
+    {
+        Task::where('id', $id)->update([
+                            'update' => False,
+                            'description' => $description,
+                            'priority' => $priority]);
     }
 
     public static function closeById($id)
