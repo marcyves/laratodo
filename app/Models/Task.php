@@ -20,19 +20,23 @@ class Task extends Model
         'priority',
         'status',
         'update',
+        'column_id',
         'user_id'
     ];
+
 
     public static function listForStatus($status)
     {
         return Task::where('status', $status)->where('user_id',Auth::id())->orderBy('priority', 'ASC')->get();
     }
 
-    public static function createNewTask($description, $priority)
+    public static function createNewTask($description, $priority, $column)
     {
+
         $newTask = Task::create(['description' => $description,
         'priority' => $priority,
         'user_id' => Auth::id(),
+        'column_id' => $column,
         'update' => False,
         'status' => 'En cours']);
     }

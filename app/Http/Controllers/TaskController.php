@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\Column;
 
 class TaskController extends Controller
 {
@@ -14,6 +15,8 @@ class TaskController extends Controller
      */
     public function index()
     {
+        $columns = Column::listAll();
+
         $tasks = Task::listForStatus('En cours');
         if($tasks->isEmpty())
             $tasks = "";
@@ -21,11 +24,14 @@ class TaskController extends Controller
         if($closed->isEmpty())
             $closed = "";
 
-        return view('dashboard', ['tasks' => $tasks, 'closedTasks' => $closed]);
+        return view('dashboard', [
+            'columns' => $columns,
+            'tasks' => $tasks,
+            'closedTasks' => $closed]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created task in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -33,7 +39,7 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         if (!empty($request->description))
-            Task::createNewTask($request->description, $request->priority);
+            Task::createNewTask($request->description, $request->priority, $request->column_id);
 
         return redirect()->route('dashboard')->with('msg', 'Nouvelle tache ajoutée');
     }
@@ -49,37 +55,44 @@ class TaskController extends Controller
      */
     public function manage(Request $request)
     {
-        switch($request->cmd)
+        // On vérifie la cohérence de la requête
+        if($request->column_id == Column::getColumnForTask())
         {
-            case "Efface":
-                Task::deleteById($request->task_id);
-                $message = "Tache effacée";
-            break;
-            case "Update":
-                Task::prepareForUpdate($request->task_id);
-                $message = "Vous pouvez modifier la tache sélectionnée";
-            break;
-            case "Updated":
-                Task::saveUpdated($request->task_id, $request->description, $request->priority);
-                $message = "La tache a été modifiée";
-            break;
-            case "Termine":
-                Task::closebyId($request->task_id);
-                $message = "Tache terminée";
-            break;
-            case "Reopen":
-                Task::openbyId($request->task_id);
-                $message = "Tache réouverte";
-            break;
-            case "+":
-                Task::priorityUp($request->task_id);
-                $message = "Priorité modifiée";
-            break;
-            case "-":
-                Task::priorityDown($request->task_id);
-                $message = "Priorité modifiée";
-            break;
+            switch($request->cmd)
+            {
+                case "Efface":
+                    Task::deleteById($request->task_id);
+                    $message = "Tache effacée";
+                break;
+                case "Update":
+                    Task::prepareForUpdate($request->task_id);
+                    $message = "Vous pouvez modifier la tache sélectionnée";
+                break;
+                case "Updated":
+                    Task::saveUpdated($request->task_id, $request->description, $request->priority);
+                    $message = "La tache a été modifiée";
+                break;
+                case "Termine":
+                    Task::closebyId($request->task_id);
+                    $message = "Tache terminée";
+                break;
+                case "Reopen":
+                    Task::openbyId($request->task_id);
+                    $message = "Tache réouverte";
+                break;
+                case "+":
+                    Task::priorityUp($request->task_id);
+                    $message = "Priorité modifiée";
+                break;
+                case "-":
+                    Task::priorityDown($request->task_id);
+                    $message = "Priorité modifiée";
+                break;
+            }
+        }else{
+            $message = "Cette tâche n'appartient pas à la route";
         }
+
     
         return redirect()->route('dashboard')->with('msg', $message);
     }

@@ -50,8 +50,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        Column::create(['name' => "À faire",
-            'user_id' => $user->id]);
+        Column::create(['name' => "À faire", 'user_id' => $user->id]);
 
         
 
