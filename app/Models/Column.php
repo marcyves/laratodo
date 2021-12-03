@@ -18,7 +18,8 @@ class Column extends Model
      */
     protected $fillable = [
         'name',
-        'user_id'
+        'user_id',
+        'sort'
     ];
 
     public static function listAll()
@@ -33,9 +34,11 @@ class Column extends Model
 
     public static function createNew($name)
     {
+        $max_col = Column::count();
 
-        $newTask = Column::create(['name' => $name,
-        'user_id' => Auth::id()]);
+        Column::create(['name' => $name,
+        'user_id' => Auth::id(),
+        'sort' => $max_col+1]);
     }
 
     public static function getColumnSortForTask($id)
