@@ -23,13 +23,10 @@ class Column extends Model
 
     public static function listAll()
     {
-        /**
-         * SELECT * FROM columns WHERE user_id = '<id connecté>' ORDER BY id
-         */
-        return Column::where('user_id',Auth::id())->orderBy('id', 'ASC')->get();
+        return Column::where('user_id',Auth::id())->orderBy('sort', 'ASC')->get();
     }
 
-    public static function createNewColumn($name)
+    public static function createNew($name)
     {
 
         $newTask = Column::create(['name' => $name,

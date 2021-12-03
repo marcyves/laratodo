@@ -30,7 +30,7 @@ class Task extends Model
         return Task::where('status', $status)->where('user_id',Auth::id())->orderBy('priority', 'ASC')->get();
     }
 
-    public static function createNewTask($description, $priority, $column)
+    public static function createNew($description, $priority, $column)
     {
 
         $newTask = Task::create(['description' => $description,

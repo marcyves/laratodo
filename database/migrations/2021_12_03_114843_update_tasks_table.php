@@ -30,6 +30,12 @@ class UpdateTasksTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('tasks', function (Blueprint $table) {
+        
+            $table->dropColumn('column_id');
+
+//            $table->foreign('column_id')->references('id')->on('columns');            
+
+        });
     }
 }

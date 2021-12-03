@@ -16,10 +16,11 @@ class TaskController extends Controller
     public function index()
     {
         $columns = Column::listAll();
-
+        
         $tasks = Task::listForStatus('En cours');
         if($tasks->isEmpty())
             $tasks = "";
+
         $closed = Task::listForStatus('Terminé');
         if($closed->isEmpty())
             $closed = "";
@@ -39,7 +40,7 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         if (!empty($request->description))
-            Task::createNewTask($request->description, $request->priority, $request->column_id);
+            Task::createNew($request->description, $request->priority, $request->column_id);
 
         return redirect()->route('dashboard')->with('msg', 'Nouvelle tache ajoutée');
     }
@@ -56,7 +57,7 @@ class TaskController extends Controller
     public function manage(Request $request)
     {
         // On vérifie la cohérence de la requête
-        if($request->column_id == Column::getColumnForTask())
+        if($request->column_id == Column::getColumnForTask($request->task_id))
         {
             switch($request->cmd)
             {

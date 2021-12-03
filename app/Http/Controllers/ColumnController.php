@@ -16,9 +16,34 @@ class ColumnController extends Controller
     public function store(Request $request)
     {
         if (!empty($request->name))
-            Column::createNewColumn($request->name);
+            Column::createNew($request->name);
 
         return redirect()->route('dashboard')->with('msg', 'Nouvelle Colonne ajoutée');
+    }
+
+    public function sort(Request $request)
+    {
+        $sort      = Column::find($request->column_id)->sort;
+
+        switch($request->cmd)
+        {
+            case "right":
+                $column_right = Column::where('sort', $sort+1)->first();
+                // On décale la colonne de droite à gauche
+                Column::where('id', $column_right->id)->update(['sort' => $column_right->sort-1]);
+                // On pousse la colonne à droite
+                Column::where('id', $request->column_id)->update(['sort' => $sort+1]);
+            break;
+            case "left":
+                $column_left = Column::where('sort', $sort-1)->first();
+                // On décale la colonne de gauche à droite
+                Column::where('id', $column_left->id)->update(['sort' => $column_left->sort+1]);
+                // On pousse la colonne à gauche
+                Column::where('id', $request->column_id)->update(['sort' => $sort-1]);
+            break;
+        }
+
+        return redirect()->route('dashboard')->with('msg', 'Ordre des colonnes modifié');
     }
 
 }
