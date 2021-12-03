@@ -14,10 +14,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::where('status', 'En cours')->orderBy('priority', 'ASC')->get();
+        $tasks = Task::listForStatus('En cours');
         if($tasks->isEmpty())
             $tasks = "";
-        $closed = Task::where('status', 'Terminé')->orderBy('priority', 'ASC')->get();
+        $closed = Task::listForStatus('Terminé');
         if($closed->isEmpty())
             $closed = "";
 

@@ -23,6 +23,11 @@ class Task extends Model
         'user_id'
     ];
 
+    public static function listForStatus($status)
+    {
+        return Task::where('status', $status)->where('user_id',Auth::id())->orderBy('priority', 'ASC')->get();
+    }
+
     public static function createNewTask($description, $priority)
     {
         $newTask = Task::create(['description' => $description,
