@@ -15,7 +15,11 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::where('status', 'En cours')->orderBy('priority', 'ASC')->get();
+        if($tasks->isEmpty())
+            $tasks = "";
         $closed = Task::where('status', 'Terminé')->orderBy('priority', 'ASC')->get();
+        if($closed->isEmpty())
+            $closed = "";
 
         return view('dashboard', ['tasks' => $tasks, 'closedTasks' => $closed]);
     }

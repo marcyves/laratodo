@@ -18,12 +18,15 @@
                             <div class="p-2 bg-indigo-800 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex" role="alert">
                             <span class="flex rounded-full bg-indigo-500 uppercase px-2 py-1 text-xs font-bold mr-3">New</span>
                             <span class="font-semibold mr-2 text-left flex-auto">
-                            {!! \Session::get('msg') !!}
+                            {{ \Session::get('msg') }}
                             </span>
                         </div>
                         </div>
                     @endif
-                    <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Taches en cours</h2>
+                    @empty($tasks)
+                        <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Pas de taches en cours</h2>
+                    @else
+                        <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Taches en cours</h2>
                         <ul>
                         @foreach ($tasks as $task)
                             <li class="flex">
@@ -50,7 +53,11 @@
                             </li>
                         @endforeach
                         </ul>
-                        <hr>
+                        @endempty
+                        
+                        @empty($closedTasks)
+                        <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Pas de taches terminées</h2>
+                        @else
                         <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Taches terminées</h2>
                         <ul>
                             @foreach ($closedTasks as $task)
@@ -76,7 +83,7 @@
                                 </li>
                             @endforeach
                             </ul>
-    
+                        @endempty
                     @endempty
                 </div>
             </div>
@@ -91,13 +98,13 @@
 
                 <form action="{{ route('store') }}" method="post">
                     @csrf
-                    <input type="text" name="description">
+                    <x-input type="text" name="description"></x-input>
                     <select name="priority">
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
                     </select>
-                    <input type="submit" value="Save">
+                    <x-button type="submit" name="cmd" value="Save"><i class="fa-regular fa-circle-check"></i></x-button>
                 </form>
                 </div>
             </div>
