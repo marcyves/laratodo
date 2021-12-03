@@ -35,7 +35,9 @@ class TaskController extends Controller
     }
 
     /**
-     * Manage the specified task in storage.
+     * Manage the specified task in storage
+     * 
+     * Cette méthode est appelée par tous les boutons du formulaire de gestion des taches
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -47,23 +49,27 @@ class TaskController extends Controller
         {
             case "Efface":
                 Task::deleteById($request->task_id);
-
+                $message = "Tache effacée";
             break;
             case "Termine":
                 Task::closebyId($request->task_id);
+                $message = "Tache terminée";
             break;
             case "Reopen":
                 Task::openbyId($request->task_id);
+                $message = "Tache réouverte";
             break;
             case "+":
                 Task::priorityUp($request->task_id);
+                $message = "Priorité modifiée";
             break;
             case "-":
                 Task::priorityDown($request->task_id);
+                $message = "Priorité modifiée";
             break;
         }
     
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')->with('msg', $message);
     }
 
 }

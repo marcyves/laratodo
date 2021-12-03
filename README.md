@@ -12,4 +12,3 @@ Pour tester sur votre machine, une fois `composer` installé :
 
     Pour compiler le CSS
     npm install & npm run serve
-
