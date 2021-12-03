@@ -56,44 +56,45 @@ class TaskController extends Controller
      */
     public function manage(Request $request)
     {
-        // On vérifie la cohérence de la requête
-        if($request->column_id == Column::getColumnIdByTask($request->task_id))
+        switch($request->cmd)
         {
-            switch($request->cmd)
-            {
-                case "Efface":
-                    Task::deleteById($request->task_id);
-                    $message = "Tache effacée";
-                break;
-                case "Update":
-                    Task::prepareForUpdate($request->task_id);
-                    $message = "Vous pouvez modifier la tache sélectionnée";
-                break;
-                case "Updated":
-                    Task::saveUpdated($request->task_id, $request->description, $request->priority);
-                    $message = "La tache a été modifiée";
-                break;
-                case "Termine":
-                    Task::closebyId($request->task_id);
-                    $message = "Tache terminée";
-                break;
-                case "Reopen":
+            case "Efface":
+                Task::deleteById($request->task_id);
+                $message = "Tache effacée";
+            break;
+            case "Update":
+                Task::prepareForUpdate($request->task_id);
+                $message = "Vous pouvez modifier la tache sélectionnée";
+            break;
+            case "Updated":
+                Task::saveUpdated($request->task_id, $request->description, $request->priority);
+                $message = "La tache a été modifiée";
+            break;
+            case "Termine":
+                Task::closebyId($request->task_id);
+                $message = "Tache terminée";
+            break;
+            case "Reopen":
+                if(Task::status($request->task_id) == "Terminé"){
+                    // Elle est marquée terminée, elle repart en colonne
                     Task::openbyId($request->task_id);
-                    $message = "Tache réouverte";
-                break;
-                case "+":
-                    Task::priorityUp($request->task_id);
-                    $message = "Priorité modifiée";
-                break;
-                case "-":
-                    Task::priorityDown($request->task_id);
-                    $message = "Priorité modifiée";
-                break;
-            }
-        }else{
-            $message = "Cette tâche n'appartient pas à la route";
+                    $message = "Tache réouverte";    
+                }else{
+                    $sort  = Column::getColumnSortForTask($request->task_id);
+                    $left_column_id = Column::getColumnIdBySort($sort-1);
+                    Task::moveColumn($request->task_id, $left_column_id);
+                    $message = "Tache déplacée";    
+                }
+            break;
+            case "+":
+                Task::priorityUp($request->task_id);
+                $message = "Priorité modifiée";
+            break;
+            case "-":
+                Task::priorityDown($request->task_id);
+                $message = "Priorité modifiée";
+            break;
         }
-
     
         return redirect()->route('dashboard')->with('msg', $message);
     }

@@ -40,10 +40,17 @@ class Task extends Model
         'update' => False,
         'status' => 'En cours']);
     }
+    
     public static function deleteById($id)
     {
         Task::where('id', $id)->delete();
     }
+
+    public static function status($id)
+    {
+        return Task::find($id)->status;
+    }
+
     public static function prepareForUpdate($id)
     {
         Task::where('id', $id)->update(['update' => True]);
@@ -67,7 +74,7 @@ class Task extends Model
             Task::where('id', $id)->update(['status' => 'Terminé']);
         }else{
             // Quand une tâche est terminée dans une colonne, elle passe dans la colonne à droite
-            $next_column_id = Column::getColumnIdBySort($sort)+1;
+            $next_column_id = Column::getColumnIdBySort($sort+1);
             Task::moveColumn($id, $next_column_id);
         }
     }

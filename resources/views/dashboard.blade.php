@@ -29,9 +29,7 @@
             </div>
 
             <div class="flex flex-row content-between space-y-2 bg-white shadow-sm sm:rounded-lg">
-                <?php $count = 0;
-                $max = count($columns);
-            ?>
+                <?php $max = count($columns); ?>
             @foreach ($columns as $column)
                 <section class="flex-shrink p-2 bg-white border-b border-gray-200">
                 <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">
@@ -39,12 +37,11 @@
                 <form action="{{ route('column.sort') }}" method="post">
                     @csrf
                     <input type="hidden" name="column_id" value="{{ $column->id }}">
-                    @if($count>0)
-                    <x-button type="submit" name="cmd" value="left"><i class="fa-solid fa-arrow-left"></i></i></x-button>
+                    @if($column->sort > 1)
+                        <x-button type="submit" name="cmd" value="left"><i class="fa-solid fa-arrow-left"></i></i></x-button>
                     @endif
-                    <?php $count++; ?>
-                    @if($count<$max)
-                    <x-button type="submit" name="cmd" value="right"><i class="fa-solid fa-arrow-right"></i></i></x-button>
+                    @if($column->sort < $max)
+                        <x-button type="submit" name="cmd" value="right"><i class="fa-solid fa-arrow-right"></i></i></x-button>
                     @endif
                 </form>
                 </h2>
@@ -105,6 +102,9 @@
                                             <x-button type="submit" name="cmd" value="+"><i class="fa-solid fa-arrow-up"></i></x-button>
                                             <x-button type="submit" name="cmd" value="-"><i class="fa-solid fa-arrow-down"></i></x-button>
                                             <x-button type="submit" name="cmd" value="Update"><i class="fa-solid fa-pen-to-square"></i></x-button>
+                                            @if($column->sort > 1)
+                                                <x-button type="submit" name="cmd" value="Reopen"><i class="fa-solid fa-backward-step"></i></x-button>
+                                            @endif
                                             <x-button type="submit" name="cmd" value="Termine"><i class="fa-regular fa-circle-check"></i></x-button>
                                             <x-button type="submit" name="cmd" value="Efface"><i class="fa-solid fa-eraser"></i></x-button>
                                         </form>        
@@ -118,6 +118,40 @@
                 </section>
             @endforeach 
             </div>
+
+
+            @empty($closedTasks)
+            <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Pas de taches terminées</h2>
+            @else
+            <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Taches terminées</h2>
+            <ul>
+                @foreach ($closedTasks as $task)
+                    <li class="flex">
+                        <div class="flex-1 min-w-max">
+                            @if($task->priority=="A")
+                            <span class="prioA">
+                            @elseif($task->priority=="B")
+                            <span class="prioB">
+                            @else    
+                            <span class="prioC">
+                            @endif
+                                {{ $task->priority }}</span> : {{ $task->description }}  
+                        </div> 
+                        <div class="flex-none min-w-max">
+                            <form action="{{ route('manage') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                <x-button type="submit" name="cmd" value="Reopen"><i class="fa-solid fa-backward-step"></i></x-button>
+                                <x-button type="submit" name="cmd" value="Efface"><i class="fa-solid fa-eraser"></i></x-button>
+                                </form>
+                        </div>
+                    </li>
+                @endforeach
+                </ul>
+            @endempty
+
+
+
         </div>
     </div>
 </div>
