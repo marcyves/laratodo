@@ -18,5 +18,7 @@ Route::get('/', [TaskController::class, 'index'])->name('dashboard');
 Route::post('/store', [TaskController::class, 'store'])->middleware(['auth'])->name('store');
 Route::post('/manage', [TaskController::class, 'manage'])->middleware(['auth'])->name('manage');
 
+// TODO Route inutile pour corriger bug à la connexion
+Route::get('/dashboard', [TaskController::class, 'index'])->name('dashboard');
 
 require __DIR__.'/auth.php';
