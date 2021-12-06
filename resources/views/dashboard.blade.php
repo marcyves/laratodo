@@ -60,8 +60,8 @@
                 </form>
 
                 @empty($tasks)
-                You're logged in!
-                <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Pas de taches en cours</h2>
+                    You're logged in!
+                    <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Pas de taches en cours</h2>
                 @else
                     <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Taches en cours</h2>
                     <ul>
