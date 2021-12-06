@@ -67,7 +67,7 @@ class Task extends Model
     public static function closeById($id)
     {
         $max_col = Column::count();
-        $sort  = Column::getColumnSortForTask($id);
+        $sort    = Column::getColumnSortForTask($id);
 
         if($sort>=$max_col){
             // Quand elle arrive dans la dernière colonne, son status passe à terminé

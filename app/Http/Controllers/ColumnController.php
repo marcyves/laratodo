@@ -8,6 +8,19 @@ use App\Models\Column;
 class ColumnController extends Controller
 {
         /**
+     * Return a listing of the columns.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function api_index()
+    {
+        $columns = Column::listAll();
+
+        return response()->json([
+            ['columns' => $columns]
+        ]);    
+    }
+    /**
      * Store a newly created column in storage.
      *
      * @param  \Illuminate\Http\Request  $request

@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\ColumnController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/tasks', [TaskController::class, 'api_index']);
+Route::get('/columns', [ColumnController::class, 'api_index']);
 

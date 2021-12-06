@@ -9,13 +9,35 @@ use App\Models\Column;
 class TaskController extends Controller
 {
     /**
+     * Return a listing of the tasks.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function api_index()
+    {
+        $columns = Column::listAll();
+        
+        $tasks = Task::listForStatus('En cours');
+        if($tasks->isEmpty())
+            $tasks = "";
+
+        $closed = Task::listForStatus('Terminé');
+        if($closed->isEmpty())
+            $closed = "";
+
+
+        return response()->json([
+            ['tasks' => $columns]
+        ]);    
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $columns = Column::listAll();
+        $columns = Column::listAllUserColumns();
         
         $tasks = Task::listForStatus('En cours');
         if($tasks->isEmpty())

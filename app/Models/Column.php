@@ -24,11 +24,17 @@ class Column extends Model
 
     public static function listAll()
     {
+        return Column::all();
+    }
+
+    public static function listAllUserColumns()
+    {
         return Column::where('user_id',Auth::id())->orderBy('sort', 'ASC')->get();
     }
 
     public static function count()
     {
+        // TODO compter uniquement les colonnes du user connecté
         return Column::all()->count();
     }
 
