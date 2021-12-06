@@ -121,9 +121,9 @@
 
 
             @empty($closedTasks)
-            <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Pas de taches terminées</h2>
+            <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Pas de taches archivées</h2>
             @else
-            <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Taches terminées</h2>
+            <h2 class="bg-gray-100 text-center py-4 lg:px-4 font-bold text-xl text-gray-600 leading-tight">Taches archivées</h2>
             <ul>
                 @foreach ($closedTasks as $task)
                     <li class="flex">
