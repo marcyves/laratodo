@@ -34,8 +34,6 @@ class UpdateTasksTable extends Migration
         
             $table->dropColumn('column_id');
 
-//            $table->foreign('column_id')->references('id')->on('columns');            
-
         });
     }
 }
